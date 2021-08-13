@@ -56,7 +56,7 @@ public class Usuario implements Serializable {
 
     @Override
     public String toString() {
-        return "Usuario{" +
+        return "Usuario {" +
                 "Id=" + this.id + '\'' +
                 ", name=" + this.name + '\'' +
                 ", email=" + this.email + '\'' +
