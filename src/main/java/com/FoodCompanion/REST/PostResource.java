@@ -43,13 +43,13 @@ public class PostResource {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<Post> addPost(Post post1){
+    public ResponseEntity<Post> addPost(@RequestBody Post post1){
         Post post = postService.addPost(post1);
         return new ResponseEntity<>(post, HttpStatus.CREATED);
     }
 
     @PutMapping("/update")
-    public ResponseEntity<Post> updatePost(Post post1){
+    public ResponseEntity<Post> updatePost(@RequestBody Post post1){
         Post post = postService.updatePost(post1);
         return new ResponseEntity<>(post, HttpStatus.OK);
     }

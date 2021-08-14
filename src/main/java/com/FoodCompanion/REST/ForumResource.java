@@ -44,13 +44,13 @@ public class ForumResource {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<Forum> addForum(Forum forum1){
+    public ResponseEntity<Forum> addForum(@RequestBody Forum forum1){
         Forum forum = forumService.addForum(forum1);
         return new ResponseEntity<>(forum, HttpStatus.CREATED);
     }
 
     @PutMapping("/update")
-    public ResponseEntity<Forum> updateForum(Forum forum1){
+    public ResponseEntity<Forum> updateForum(@RequestBody Forum forum1){
         Forum forum = forumService.updateForum(forum1);
         return new ResponseEntity<>(forum, HttpStatus.OK);
     }

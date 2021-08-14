@@ -1,8 +1,9 @@
 package com.FoodCompanion.REST;
 
-import com.FoodCompanion.REST.assembler.RecetaModelAssembler;
 import com.FoodCompanion.REST.assembler.RecetarioModelAssembler;
+import com.FoodCompanion.REST.model.Receta;
 import com.FoodCompanion.REST.model.Recetario;
+import com.FoodCompanion.REST.service.RecetaService;
 import com.FoodCompanion.REST.service.RecetarioService;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
@@ -22,10 +23,12 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 public class RecetarioResource  {
 
     private final RecetarioService recetarioService;
+    private final RecetaService recetaService;
     private final RecetarioModelAssembler recetarioModelAssembler;
 
-    public RecetarioResource (RecetarioService recetarioService, RecetarioModelAssembler recetarioModelAssembler){
+    public RecetarioResource (RecetarioService recetarioService, RecetarioModelAssembler recetarioModelAssembler, RecetaService recetaService){
         this.recetarioService = recetarioService;
+        this.recetaService = recetaService;
         this.recetarioModelAssembler = recetarioModelAssembler;
     }
 
@@ -46,17 +49,30 @@ public class RecetarioResource  {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<Recetario> addRecetario(Recetario recetario){
-        Recetario recetarioAdd = recetarioService.updateRecetario(recetario);
+    public ResponseEntity<Recetario> addRecetario(@RequestBody Recetario recetario){
+        Recetario recetarioAdd = recetarioService.addRecetario(recetario);
         return new ResponseEntity<>(recetarioAdd, HttpStatus.CREATED);
     }
 
     @PutMapping("/update")
-    public ResponseEntity<Recetario> updateRecetario(Recetario recetario) {
+    public ResponseEntity<Recetario> updateRecetario(@RequestBody Recetario recetario) {
         Recetario recetarioUpdate = recetarioService.updateRecetario(recetario);
         return new ResponseEntity<>(recetarioUpdate, HttpStatus.OK);
     }
 
+     @PutMapping("/{recetarioId}/receta/{recetaId}")
+     public ResponseEntity<Recetario> addRecetaToRecetario(
+             @PathVariable Long recetarioId,
+             @PathVariable Long recetaId)
+     {
+         Receta receta = recetaService.findRecetaById(recetaId);
+         Recetario recetario = recetarioService.findRecetarioById(recetarioId);
+         recetario.addRecetaToRecetario(receta);
+         receta.addRecetarioToReceta(recetario);
+         recetaService.addReceta(receta);
+         recetarioService.addRecetario(recetario);
+         return new ResponseEntity<>(recetario,HttpStatus.OK);
+     }
     @DeleteMapping("/delete/{id}")
     @Transactional
     public ResponseEntity<?> deleteRecetario(@PathVariable("id") Long id){

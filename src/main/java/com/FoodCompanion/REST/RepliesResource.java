@@ -44,13 +44,13 @@ public class RepliesResource {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<Replies> addReply(Replies replies1){
+    public ResponseEntity<Replies> addReply(@RequestBody Replies replies1){
         Replies replies = repliesService.addReplies(replies1);
         return new ResponseEntity<>(replies, HttpStatus.CREATED);
     }
 
     @PutMapping("/update")
-    public ResponseEntity<Replies> updateReply (Replies replies1){
+    public ResponseEntity<Replies> updateReply (@RequestBody Replies replies1){
         Replies replies = repliesService.updateResply(replies1);
         return new ResponseEntity<>(replies, HttpStatus.OK);
     }
