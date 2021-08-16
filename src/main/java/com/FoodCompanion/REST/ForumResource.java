@@ -61,4 +61,5 @@ public class ForumResource {
         forumService.deleteForum(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
 }

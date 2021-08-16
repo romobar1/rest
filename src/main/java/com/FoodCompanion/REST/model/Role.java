@@ -2,15 +2,20 @@ package com.FoodCompanion.REST.model;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Role implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false, updatable = false)
+    @Column(nullable = false, updatable = false, name = "roleId")
     private Long id;
     private String title;
     private String description;
+    @OneToMany
+    @JoinColumn(name="role")
+    private List<Usuario> usuarios = new ArrayList<>();
     public Role (String title, String description){
         this.title = title;
         this.description = description;
@@ -39,6 +44,14 @@ public class Role implements Serializable {
         this.id = id;
     }
 
+    public List<Usuario> getUsuarios() {
+        return usuarios;
+    }
+
+    public void setUsuarios(List<Usuario> usuarios) {
+        this.usuarios = usuarios;
+    }
+
     @Override
     public String toString() {
         return "Role{" +
@@ -46,5 +59,9 @@ public class Role implements Serializable {
                 ", title=" + this.title + '\'' +
                 ", description=" + this.description + '\'' +
                 "}";
+    }
+
+    public void addToRole(Usuario usuario) {
+        this.usuarios.add(usuario);
     }
 }

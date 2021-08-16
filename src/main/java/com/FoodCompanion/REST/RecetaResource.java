@@ -1,8 +1,12 @@
 package com.FoodCompanion.REST;
 
 import com.FoodCompanion.REST.assembler.RecetaModelAssembler;
+import com.FoodCompanion.REST.model.Comentario;
 import com.FoodCompanion.REST.model.Receta;
+import com.FoodCompanion.REST.model.Usuario;
+import com.FoodCompanion.REST.service.ComentarioService;
 import com.FoodCompanion.REST.service.RecetaService;
+import com.FoodCompanion.REST.service.UsuarioService;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
@@ -22,10 +26,15 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @RequestMapping("/receta")
 public class RecetaResource {
     private final RecetaService recetaService;
+    private final UsuarioService usuarioService;
     private final RecetaModelAssembler recetaModelAssembler;
-    public RecetaResource (RecetaService recetaService, RecetaModelAssembler recetaModelAssembler){
+    public RecetaResource (
+            RecetaService recetaService,
+            RecetaModelAssembler recetaModelAssembler,
+            UsuarioService usuarioService){
         this.recetaService = recetaService;
         this.recetaModelAssembler = recetaModelAssembler;
+        this.usuarioService = usuarioService;
     }
 
     @GetMapping("/all")
@@ -56,10 +65,46 @@ public class RecetaResource {
         return new ResponseEntity<>(receta, HttpStatus.OK);
     }
 
+    @PostMapping("/add/user/{id}")
+     public ResponseEntity<Receta> addRecetaToUser(
+             @PathVariable("id")Long id,
+             @RequestBody Receta receta
+    ){
+        Usuario usuario = usuarioService.findUsuarioById(id);
+        usuario.addRecetaToUsuario(receta);
+        receta.setUsuario(usuario);
+        usuarioService.updateUsuario(usuario);
+        Receta receta1 = recetaService.updateReceta(receta);
+        return new ResponseEntity<>(receta1, HttpStatus.OK);
+    }
+
     @DeleteMapping("/delete/{id}")
     @Transactional
     public ResponseEntity<?> deleteRecetaById(@PathVariable("id")Long id){
         recetaService.deleteReceta(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @GetMapping("/recetario/{id}/all")
+    public CollectionModel<EntityModel<Receta>> getRecetasFromRecetario(
+            @PathVariable("id")Long id){
+        List<EntityModel<Receta>> recetas =
+                recetaService.findRecetasFromRecetario(id).stream()
+                        .map(recetaModelAssembler::toModel)
+                        .collect(Collectors.toList());
+        return CollectionModel.of(recetas,
+                linkTo(methodOn(RecetaResource.class).getAllRecetas()).withSelfRel());
+    }
+
+    @GetMapping("/user/{id}/all")
+    public CollectionModel<EntityModel<Receta>> getRecetasFromUser(
+            @PathVariable("id")Long id
+    ){
+        List<EntityModel<Receta>> recetas = recetaService.findRecetasFromUser(id).stream()
+                .map(recetaModelAssembler::toModel)
+                .collect(Collectors.toList());
+        return CollectionModel.of(recetas,
+                linkTo(methodOn(RecetaResource.class).getAllRecetas()).withSelfRel());
+    }
+
 }

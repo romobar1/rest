@@ -1,6 +1,7 @@
 package com.FoodCompanion.REST.assembler;
 
 import com.FoodCompanion.REST.ForumResource;
+import com.FoodCompanion.REST.PostResource;
 import com.FoodCompanion.REST.model.Forum;
 import com.FoodCompanion.REST.repo.ForumRepo;
 import org.springframework.hateoas.EntityModel;
@@ -16,6 +17,7 @@ public class ForumModelAssembler implements RepresentationModelAssembler<Forum, 
     public EntityModel<Forum> toModel(Forum entity) {
         return EntityModel.of(entity,
                 linkTo(methodOn(ForumResource.class).findForumById(entity.getId())).withSelfRel(),
+                linkTo(methodOn(PostResource.class).getPostFromForum(entity.getId())).withRel("Posts"),
                 linkTo(methodOn(ForumResource.class).getAllForums()).withRel("Forums")
                 );
     }

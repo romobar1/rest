@@ -4,6 +4,7 @@ import com.FoodCompanion.REST.exception.PostNotFoundException;
 import com.FoodCompanion.REST.model.Post;
 import com.FoodCompanion.REST.repo.PostRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -33,4 +34,11 @@ public class PostService {
                 new PostNotFoundException("El post con el id " + id + " no existe."));
     }
 
+    public List<Post> getPostsFromUser(Long id) {
+        return postRepo.findPostFromUserById(id);
+    }
+
+    public List<Post> getPostsFromForum(Long id) {
+        return postRepo.findPostFromForumById(id);
+    }
 }

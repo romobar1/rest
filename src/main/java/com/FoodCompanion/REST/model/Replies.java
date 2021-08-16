@@ -11,6 +11,9 @@ public class Replies implements Serializable {
     private String body;
     private Long userId;
     private String type;
+    @ManyToOne
+    @JoinColumn(name = "usuarioId", nullable = false)
+    private Post post;
     public Replies(String body, Long userId, String type){
         this.body = body;
         this.userId = userId;
@@ -49,6 +52,14 @@ public class Replies implements Serializable {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public Post getPost() {
+        return post;
+    }
+
+    public void setPost(Post post) {
+        this.post = post;
     }
 
     @Override

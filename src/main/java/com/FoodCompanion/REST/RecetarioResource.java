@@ -3,8 +3,10 @@ package com.FoodCompanion.REST;
 import com.FoodCompanion.REST.assembler.RecetarioModelAssembler;
 import com.FoodCompanion.REST.model.Receta;
 import com.FoodCompanion.REST.model.Recetario;
+import com.FoodCompanion.REST.model.Usuario;
 import com.FoodCompanion.REST.service.RecetaService;
 import com.FoodCompanion.REST.service.RecetarioService;
+import com.FoodCompanion.REST.service.UsuarioService;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
@@ -25,11 +27,13 @@ public class RecetarioResource  {
     private final RecetarioService recetarioService;
     private final RecetaService recetaService;
     private final RecetarioModelAssembler recetarioModelAssembler;
+    private final UsuarioService usuarioService;
 
-    public RecetarioResource (RecetarioService recetarioService, RecetarioModelAssembler recetarioModelAssembler, RecetaService recetaService){
+    public RecetarioResource (RecetarioService recetarioService, RecetarioModelAssembler recetarioModelAssembler, RecetaService recetaService, UsuarioService usuarioService){
         this.recetarioService = recetarioService;
         this.recetaService = recetaService;
         this.recetarioModelAssembler = recetarioModelAssembler;
+        this.usuarioService = usuarioService;
     }
 
     @GetMapping("/all")
@@ -78,5 +82,17 @@ public class RecetarioResource  {
     public ResponseEntity<?> deleteRecetario(@PathVariable("id") Long id){
         recetarioService.deleteRecetario(id);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/user/{id}/all")
+    public CollectionModel<EntityModel<Recetario>> getRecetarioFromOfUser(
+            @PathVariable("id")Long id
+    ){
+        List<EntityModel<Recetario>> recetarios =
+                recetarioService.findRecetariosOfUser(id).stream()
+                        .map(recetarioModelAssembler::toModel)
+                        .collect(Collectors.toList());
+        return CollectionModel.of(recetarios,
+                linkTo(methodOn(RecetarioResource.class).getAllRecetarios()).withSelfRel());
     }
 }

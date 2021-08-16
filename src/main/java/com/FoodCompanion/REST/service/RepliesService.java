@@ -4,6 +4,7 @@ import com.FoodCompanion.REST.exception.ReplyNotFoundException;
 import com.FoodCompanion.REST.model.Replies;
 import com.FoodCompanion.REST.repo.RepliesRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -36,4 +37,7 @@ public class RepliesService {
                 new ReplyNotFoundException("La respuesta con el id " + id + " no existe."));
     }
 
+    public List<Replies> getRepliesFromPost(Long id) {
+        return repliesRepo.findRepliesFromPostById(id);
+    }
 }

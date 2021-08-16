@@ -1,5 +1,6 @@
 package com.FoodCompanion.REST.assembler;
 
+import com.FoodCompanion.REST.RecetaResource;
 import com.FoodCompanion.REST.RecetarioResource;
 import com.FoodCompanion.REST.model.Recetario;
 import org.springframework.hateoas.EntityModel;
@@ -16,6 +17,7 @@ public class RecetarioModelAssembler implements RepresentationModelAssembler<Rec
     public EntityModel<Recetario> toModel(Recetario recetario) {
         return EntityModel.of(recetario,
                 linkTo(methodOn(RecetarioResource.class).getRecetarioById(recetario.getId())).withSelfRel(),
+                linkTo(methodOn(RecetaResource.class).getRecetasFromRecetario(recetario.getId())).withRel("recetas"),
                 linkTo(methodOn(RecetarioResource.class).getAllRecetarios()).withRel("Recetarios")
         );
     }

@@ -1,6 +1,7 @@
 package com.FoodCompanion.REST.service;
 
 import com.FoodCompanion.REST.exception.RecetaNotFoundException;
+import com.FoodCompanion.REST.model.Comentario;
 import com.FoodCompanion.REST.model.Receta;
 import com.FoodCompanion.REST.repo.RecetaRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,5 +34,13 @@ public class RecetaService {
     public Receta findRecetaById(Long id){
         return recetaRepo.findReceteById(id).orElseThrow(() ->
                 new RecetaNotFoundException("La receta con el id " + id + "no existe"));
+    }
+
+    public List<Receta> findRecetasFromRecetario(Long id){
+        return recetaRepo.findRecetaFromRecetarioById(id);
+    }
+
+    public List<Receta> findRecetasFromUser(Long id) {
+        return recetaRepo.findRecetaFromUsuarioById(id);
     }
 }

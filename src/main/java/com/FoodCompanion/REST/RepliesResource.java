@@ -1,8 +1,10 @@
 package com.FoodCompanion.REST;
 
 import com.FoodCompanion.REST.assembler.RepliesModelAssembler;
+import com.FoodCompanion.REST.model.Post;
 import com.FoodCompanion.REST.model.Replies;
 import com.FoodCompanion.REST.repo.RepliesRepo;
+import com.FoodCompanion.REST.service.PostService;
 import com.FoodCompanion.REST.service.RepliesService;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
@@ -22,10 +24,15 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 public class RepliesResource {
     private final RepliesService repliesService;
     private final RepliesModelAssembler repliesModelAssembler;
-
-    public RepliesResource (RepliesService repliesService, RepliesModelAssembler repliesModelAssembler){
+    private final PostService postService;
+    public RepliesResource (
+            RepliesService repliesService,
+            RepliesModelAssembler repliesModelAssembler,
+            PostService postService
+    ){
         this.repliesService = repliesService;
         this.repliesModelAssembler = repliesModelAssembler;
+        this.postService = postService;
     }
     @GetMapping("/all")
     public CollectionModel<EntityModel<Replies>> findAllReplies(){
@@ -48,6 +55,18 @@ public class RepliesResource {
         Replies replies = repliesService.addReplies(replies1);
         return new ResponseEntity<>(replies, HttpStatus.CREATED);
     }
+    @PostMapping("/add/{id}")
+    public ResponseEntity<Replies> addReply(
+            @RequestBody Replies replies1,
+            @PathVariable("id")Long id
+    ){
+        Post post = postService.findPostById(id);
+        post.addReply(replies1);
+        replies1.setPost(post);
+        postService.updatePost(post);
+        Replies replies = repliesService.addReplies(replies1);
+        return new ResponseEntity<>(replies, HttpStatus.CREATED);
+    }
 
     @PutMapping("/update")
     public ResponseEntity<Replies> updateReply (@RequestBody Replies replies1){
@@ -60,5 +79,16 @@ public class RepliesResource {
     public ResponseEntity<?> deleteReply(@PathVariable("id") Long id){
         repliesService.deleteReply(id);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/post/{id}/all")
+    public CollectionModel<EntityModel<Replies>> getRepliesFromPost(@PathVariable("id")Long id){
+        List<EntityModel<Replies>> replies = repliesService.getRepliesFromPost(id).stream()
+                .map(repliesModelAssembler::toModel)
+                .collect(Collectors.toList());
+
+        return CollectionModel.of(replies,
+                linkTo(methodOn(RepliesResource.class).findAllReplies()).withSelfRel());
+
     }
 }

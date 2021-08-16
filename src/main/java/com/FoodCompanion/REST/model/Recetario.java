@@ -19,6 +19,9 @@ public class Recetario implements Serializable {
     private String description;
     @ManyToMany(mappedBy = "recetario")
     private List<Receta> recetas = new ArrayList<>();
+    @ManyToOne
+    @JoinColumn(name = "usuarioId")
+    private Usuario usuario;
 
     public Recetario(String title, String description){
         this.title = title;
@@ -56,6 +59,14 @@ public class Recetario implements Serializable {
 
     public void setRecetas(List<Receta> recetas) {
         this.recetas = recetas;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
 
     @Override

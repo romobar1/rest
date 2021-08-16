@@ -20,6 +20,9 @@ public class Receta implements Serializable {
     private String body;
     private int rate;
     @JsonIgnore
+    @OneToMany(mappedBy = "receta", fetch = FetchType.LAZY)
+    private List<Comentario> comentarios = new ArrayList<>();
+    @JsonIgnore
     @ManyToMany
     @JoinTable(
             name="recetarios",
@@ -27,6 +30,9 @@ public class Receta implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "recetarioId")
     )
     private List<Recetario> recetario = new ArrayList<>();
+    @ManyToOne
+    @JoinColumn(name = "usuarioID", nullable = false)
+    private Usuario usuario;
 
     public Receta (String title, String description, String body, int rate){
         this.title = title;
@@ -84,6 +90,22 @@ public class Receta implements Serializable {
         return this.rate;
     }
 
+    public List<Comentario> getComentarios() {
+        return comentarios;
+    }
+
+    public void setComentarios(List<Comentario> comentarios) {
+        this.comentarios = comentarios;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
     @Override
     public String toString() {
          return "Receta{" +
@@ -96,7 +118,10 @@ public class Receta implements Serializable {
     }
 
     public void addRecetarioToReceta(Recetario recetario) {
-
     this.recetario.add(recetario);
+    }
+
+    public void addComentarioToReceta(Comentario comentario){
+        this.comentarios.add(comentario);
     }
 }

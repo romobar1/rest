@@ -1,6 +1,7 @@
 package com.FoodCompanion.REST.assembler;
 
 import com.FoodCompanion.REST.PostResource;
+import com.FoodCompanion.REST.RepliesResource;
 import com.FoodCompanion.REST.model.Post;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
@@ -15,6 +16,7 @@ public class PostModelAssembler implements RepresentationModelAssembler<Post, En
     public EntityModel<Post> toModel(Post post) {
         return EntityModel.of(post,
                 linkTo(methodOn(PostResource.class).getPostById(post.getId())).withSelfRel(),
+                linkTo(methodOn(RepliesResource.class).getRepliesFromPost(post.getId())).withRel("replies"),
                 linkTo(methodOn(PostResource.class).getAllPosts()).withRel("Posts")
         );
     }

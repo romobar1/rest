@@ -1,7 +1,11 @@
 package com.FoodCompanion.REST.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
+
 @Entity
 public class Post implements Serializable {
 
@@ -12,6 +16,15 @@ public class Post implements Serializable {
     private String name;
     private String topics;
     private Long userId;
+    @ManyToOne
+    @JoinColumn(name = "usuarioId", nullable = false)
+    private Usuario usuario;
+    @OneToMany(mappedBy = "post")
+    @JsonIgnore
+    private List<Replies> replies;
+    @ManyToOne
+    @JoinColumn(name = "forumId", nullable = false)
+    private Forum forum;
 
     public Post(String name, String topics, Long userId){
     this.name = name;
@@ -53,6 +66,30 @@ public class Post implements Serializable {
         this.topics = topics;
     }
 
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public Forum getForum() {
+        return forum;
+    }
+
+    public void setForum(Forum forum) {
+        this.forum = forum;
+    }
+
+    public List<Replies> getReplies() {
+        return replies;
+    }
+
+    public void setReplies(List<Replies> replies) {
+        this.replies = replies;
+    }
+
     @Override
     public String toString() {
         return "Usuario{" +
@@ -61,5 +98,9 @@ public class Post implements Serializable {
                 ", email=" + this.topics + '\'' +
                 ", imageUrl=" + this.userId + '\'' +
                 "}";
+    }
+
+    public void addReply(Replies reply) {
+        this.replies.add(reply);
     }
 }

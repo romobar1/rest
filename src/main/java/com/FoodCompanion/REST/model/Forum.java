@@ -2,14 +2,18 @@ package com.FoodCompanion.REST.model;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
+
 @Entity
 public class Forum implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false, updatable = false)
+    @Column(nullable = false, updatable = false, name = "forumId")
     private Long id;
     private String name;
     private String description;
+    @OneToMany(mappedBy = "forum")
+    private List<Post> posts;
 
     public Forum(String name, String description){
         this.name = name;
@@ -42,6 +46,14 @@ public class Forum implements Serializable {
         this.description = description;
     }
 
+    public void setPosts(List<Post> posts) {
+        this.posts = posts;
+    }
+
+    public List<Post> getPosts() {
+        return posts;
+    }
+
     @Override
     public String toString() {
         return "Usuario {" +
@@ -49,5 +61,10 @@ public class Forum implements Serializable {
                 ", name=" + this.name + '\'' +
                 ", description=" + this.description + '\'' +
                 "}";
+    }
+
+    public void addPostToForum(Post post) {
+
+        this.posts.add(post);
     }
 }

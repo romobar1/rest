@@ -34,4 +34,8 @@ public class ComentarioService {
         return comentarioRepo.findComentarioById(id).orElseThrow(()->
                 new ComentarioNotFoundException("Comentario con el id " + id + " no exsiste"));
     }
+
+    public List<Comentario> findComentariosByReceta(Long id){
+        return comentarioRepo.findComentarioByRecetaId(id);
+    }
 }

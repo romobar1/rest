@@ -2,7 +2,9 @@ package com.FoodCompanion.REST;
 
 import com.FoodCompanion.REST.assembler.ComentarioModelAssenbler;
 import com.FoodCompanion.REST.model.Comentario;
+import com.FoodCompanion.REST.model.Receta;
 import com.FoodCompanion.REST.service.ComentarioService;
+import com.FoodCompanion.REST.service.RecetaService;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
@@ -20,9 +22,15 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @RequestMapping("/comentario")
 public class ComentarioResource {
     private final ComentarioService comentarioService;
+    private final RecetaService recetaService;
     private final ComentarioModelAssenbler comentarioModelAssenbler;
-    public ComentarioResource(ComentarioService comentarioService,ComentarioModelAssenbler comentarioModelAssenbler){
+    public ComentarioResource(
+            ComentarioService comentarioService,
+            ComentarioModelAssenbler comentarioModelAssenbler,
+            RecetaService recetaService
+            ){
         this.comentarioService = comentarioService;
+        this.recetaService = recetaService;
         this.comentarioModelAssenbler = comentarioModelAssenbler;
     }
 
@@ -42,9 +50,18 @@ public class ComentarioResource {
         return comentarioModelAssenbler.toModel(comentario);
      }
 
-     @PostMapping("/add")
-    public ResponseEntity<Comentario> addComentario(@RequestBody Comentario comentario1){
+     @PostMapping("/add/user/{id}")
+    public ResponseEntity<Comentario> addComentario(
+            @RequestBody Comentario comentario1,
+            @PathVariable("id")Long id
+     ){
+        Receta receta = recetaService.findRecetaById(id);
+        receta.addComentarioToReceta(comentario1);
+        comentario1.setReceta(receta);
+
         Comentario comentario = comentarioService.addComentario(comentario1);
+        receta.addComentarioToReceta(comentario);
+        recetaService.updateReceta(receta);
         return new ResponseEntity<>(comentario, HttpStatus.CREATED);
      }
 
@@ -59,6 +76,18 @@ public class ComentarioResource {
     public ResponseEntity<?> deleteComentario(@PathVariable("id") Long id){
         comentarioService.deleteUsuario(id);
         return new ResponseEntity<>(HttpStatus.OK);
+     }
+
+     @GetMapping("/user/{id}/all")
+    public CollectionModel<EntityModel<Comentario>> getAllComentsByRecetaId(
+            @PathVariable("id")Long id
+     ){
+        List<EntityModel<Comentario>> comentarios =
+                comentarioService.findComentariosByReceta(id).stream()
+                        .map(comentarioModelAssenbler::toModel)
+                        .collect(Collectors.toList());
+         return CollectionModel.of(comentarios,
+                 linkTo(methodOn(ComentarioResource.class).getAllComentarios()).withSelfRel());
      }
 
 }
