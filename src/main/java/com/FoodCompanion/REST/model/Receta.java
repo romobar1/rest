@@ -31,6 +31,7 @@ public class Receta implements Serializable {
     )
     private List<Recetario> recetario = new ArrayList<>();
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "usuarioID", nullable = false)
     private Usuario usuario;
 

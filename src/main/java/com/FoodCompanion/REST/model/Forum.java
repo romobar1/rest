@@ -1,5 +1,7 @@
 package com.FoodCompanion.REST.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
@@ -13,6 +15,7 @@ public class Forum implements Serializable {
     private String name;
     private String description;
     @OneToMany(mappedBy = "forum")
+    @JsonIgnore
     private List<Post> posts;
 
     public Forum(String name, String description){

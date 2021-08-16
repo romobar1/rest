@@ -18,6 +18,7 @@ public class Recetario implements Serializable {
     private String title;
     private String description;
     @ManyToMany(mappedBy = "recetario")
+    @JsonIgnore
     private List<Receta> recetas = new ArrayList<>();
     @ManyToOne
     @JoinColumn(name = "usuarioId")
