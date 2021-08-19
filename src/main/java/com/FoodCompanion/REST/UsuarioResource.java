@@ -104,4 +104,10 @@ public class UsuarioResource {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @GetMapping("/find/{name}")
+    public EntityModel<Usuario> findUsuarioByUserNameS(@PathVariable("name")String name){
+        Usuario usuario = usuarioService.findUsuarioByUserName(name);
+        return usuarioModelAssembler.toModel(usuario);
+    }
+
 }

@@ -5,7 +5,6 @@ import com.FoodCompanion.REST.model.Usuario;
 import com.FoodCompanion.REST.repo.UsuarioRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 @Service
@@ -33,5 +32,10 @@ public class UsuarioService  {
     public Usuario findUsuarioById(Long id){
         return usuarioRepo.findUsuarioById(id).orElseThrow(
                 ()-> new UsuarioNotFoundException(" Usuario con el id " + id + " no encontrado"));
+    }
+
+    public Usuario findUsuarioByUserName(String name) {
+        return usuarioRepo.findUsuarioByName(name).orElseThrow(
+                ()-> new UsuarioNotFoundException(" Usuario con el id " + name + " no encontrado"));
     }
 }
