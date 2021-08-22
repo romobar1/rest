@@ -3,7 +3,7 @@ package com.FoodCompanion.REST;
 import com.FoodCompanion.REST.assembler.PostModelAssembler;
 import com.FoodCompanion.REST.model.Forum;
 import com.FoodCompanion.REST.model.Post;
-import com.FoodCompanion.REST.model.Usuario;
+import com.FoodCompanion.REST.model.User;
 import com.FoodCompanion.REST.service.ForumService;
 import com.FoodCompanion.REST.service.PostService;
 import com.FoodCompanion.REST.service.UsuarioService;
@@ -65,7 +65,7 @@ public class PostResource {
             @RequestBody Post post1,
             @PathVariable("id")Long id
     ){
-        Usuario usuario = usuarioService.findUsuarioById(id);
+        User usuario = usuarioService.findUsuarioById(id);
         usuario.addPost(post1);
         post1.setUsuario(usuario);
         usuarioService.updateUsuario(usuario);

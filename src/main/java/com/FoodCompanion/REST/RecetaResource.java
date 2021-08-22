@@ -1,10 +1,8 @@
 package com.FoodCompanion.REST;
 
 import com.FoodCompanion.REST.assembler.RecetaModelAssembler;
-import com.FoodCompanion.REST.model.Comentario;
 import com.FoodCompanion.REST.model.Receta;
-import com.FoodCompanion.REST.model.Usuario;
-import com.FoodCompanion.REST.service.ComentarioService;
+import com.FoodCompanion.REST.model.User;
 import com.FoodCompanion.REST.service.RecetaService;
 import com.FoodCompanion.REST.service.UsuarioService;
 import org.springframework.hateoas.CollectionModel;
@@ -15,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 
 
 import javax.transaction.Transactional;
-import java.beans.Transient;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,6 +20,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
+@CrossOrigin(origins = "*")
 @RequestMapping("/receta")
 public class RecetaResource {
     private final RecetaService recetaService;
@@ -70,7 +68,7 @@ public class RecetaResource {
              @PathVariable("id")Long id,
              @RequestBody Receta receta
     ){
-        Usuario usuario = usuarioService.findUsuarioById(id);
+        User usuario = usuarioService.findUsuarioById(id);
         usuario.addRecetaToUsuario(receta);
         receta.setUsuario(usuario);
         usuarioService.updateUsuario(usuario);

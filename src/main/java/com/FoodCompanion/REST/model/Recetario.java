@@ -2,7 +2,6 @@ package com.FoodCompanion.REST.model;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonSetter;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -22,7 +21,7 @@ public class Recetario implements Serializable {
     private List<Receta> recetas = new ArrayList<>();
     @ManyToOne
     @JoinColumn(name = "usuarioId")
-    private Usuario usuario;
+    private User usuario;
 
     public Recetario(String title, String description){
         this.title = title;
@@ -62,11 +61,11 @@ public class Recetario implements Serializable {
         this.recetas = recetas;
     }
 
-    public Usuario getUsuario() {
+    public User getUsuario() {
         return usuario;
     }
 
-    public void setUsuario(Usuario usuario) {
+    public void setUsuario(User usuario) {
         this.usuario = usuario;
     }
 

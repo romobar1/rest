@@ -3,7 +3,6 @@ package com.FoodCompanion.REST;
 import com.FoodCompanion.REST.assembler.RecetarioModelAssembler;
 import com.FoodCompanion.REST.model.Receta;
 import com.FoodCompanion.REST.model.Recetario;
-import com.FoodCompanion.REST.model.Usuario;
 import com.FoodCompanion.REST.service.RecetaService;
 import com.FoodCompanion.REST.service.RecetarioService;
 import com.FoodCompanion.REST.service.UsuarioService;

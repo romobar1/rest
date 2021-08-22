@@ -4,9 +4,7 @@ import com.FoodCompanion.REST.PostResource;
 import com.FoodCompanion.REST.RecetaResource;
 import com.FoodCompanion.REST.RecetarioResource;
 import com.FoodCompanion.REST.UsuarioResource;
-import com.FoodCompanion.REST.model.Usuario;
-import com.FoodCompanion.REST.service.RecetarioService;
-import com.FoodCompanion.REST.service.UsuarioService;
+import com.FoodCompanion.REST.model.User;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
 import org.springframework.stereotype.Component;
@@ -15,9 +13,9 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Component
-public class UsuarioModelAssembler implements RepresentationModelAssembler<Usuario, EntityModel<Usuario>> {
+public class UsuarioModelAssembler implements RepresentationModelAssembler<User, EntityModel<User>> {
     @Override
-    public EntityModel<Usuario> toModel(Usuario usuario) {
+    public EntityModel<User> toModel(User usuario) {
         return  EntityModel.of(usuario,
                 linkTo(methodOn(UsuarioResource.class).getUsuarioById(usuario.getId())).withSelfRel(),
                 linkTo(methodOn(RecetarioResource.class).getRecetarioFromOfUser(usuario.getId())).withRel("recetarios"),

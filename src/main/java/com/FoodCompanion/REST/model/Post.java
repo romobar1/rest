@@ -18,7 +18,7 @@ public class Post implements Serializable {
     private Long userId;
     @ManyToOne
     @JoinColumn(name = "usuarioId", nullable = false)
-    private Usuario usuario;
+    private User usuario;
     @OneToMany(mappedBy = "post")
     @JsonIgnore
     private List<Replies> replies;
@@ -66,11 +66,11 @@ public class Post implements Serializable {
         this.topics = topics;
     }
 
-    public void setUsuario(Usuario usuario) {
+    public void setUsuario(User usuario) {
         this.usuario = usuario;
     }
 
-    public Usuario getUsuario() {
+    public User getUsuario() {
         return usuario;
     }
 

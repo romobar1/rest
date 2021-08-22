@@ -1,7 +1,7 @@
 package com.FoodCompanion.REST.service;
 
 import com.FoodCompanion.REST.exception.UsuarioNotFoundException;
-import com.FoodCompanion.REST.model.Usuario;
+import com.FoodCompanion.REST.model.User;
 import com.FoodCompanion.REST.repo.UsuarioRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,29 +9,30 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class UsuarioService  {
+public class UsuarioService   {
     private final UsuarioRepo usuarioRepo;
     @Autowired
     public UsuarioService(UsuarioRepo usuarioRepo) {
         this.usuarioRepo = usuarioRepo;
     }
 
-    public Usuario addUser(Usuario usuario){
+    public User addUser(User usuario){
        return usuarioRepo.save(usuario);
     }
 
-    public List<Usuario> findAllUsuarios(){
+    public List<User> findAllUsuarios(){
         return usuarioRepo.findAll();
     }
 
-    public Usuario updateUsuario(Usuario usuario){
+    public User updateUsuario(User usuario){
         return usuarioRepo.save(usuario);
     }
     public void deleteUsuario(Long id){
-        usuarioRepo.deleteUsuarioById(id);
+        usuarioRepo.deleteUserById(id);
     }
-    public Usuario findUsuarioById(Long id){
-        return usuarioRepo.findUsuarioById(id).orElseThrow(
+    public User findUsuarioById(Long id){
+        return usuarioRepo.findUserById(id).orElseThrow(
                 ()-> new UsuarioNotFoundException(" Usuario con el id " + id + " no encontrado"));
     }
+
 }

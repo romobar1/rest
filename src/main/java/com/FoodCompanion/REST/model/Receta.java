@@ -1,13 +1,13 @@
 package com.FoodCompanion.REST.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.hibernate.loader.collection.OneToManyJoinWalker;
-import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 public class Receta implements Serializable {
@@ -16,7 +16,16 @@ public class Receta implements Serializable {
     @Column(name="recetaId")
     private Long id;
     private String title;
+    @Lob
     private String description;
+    private int numComensales;
+    private int tiempo;
+    private String type;
+    private int dificultad;
+    @ElementCollection
+    private Set<String> tags = new HashSet<>();
+    private String ingredientes;
+    @Lob
     private String body;
     private int rate;
     @JsonIgnore
@@ -32,14 +41,20 @@ public class Receta implements Serializable {
     private List<Recetario> recetario = new ArrayList<>();
     @ManyToOne
     @JsonIgnore
-    @JoinColumn(name = "usuarioID", nullable = false)
-    private Usuario usuario;
+    @JoinColumn(name = "usuarioID")
+    private User usuario;
 
-    public Receta (String title, String description, String body, int rate){
+    public Receta(String title, String description, String type, int numComensales, int tiempo, int dificultad, Set<String> tags, String ingredientes, String body, int rate) {
         this.title = title;
         this.description = description;
+        this.numComensales = numComensales;
+        this.tiempo = tiempo;
+        this.dificultad = dificultad;
+        this.tags = tags;
+        this.ingredientes = ingredientes;
         this.body = body;
         this.rate = rate;
+        this.type = type;
     }
 
     public Receta() {} // Empty constructor
@@ -50,6 +65,46 @@ public class Receta implements Serializable {
 
     public void setBody(String body) {
         this.body = body;
+    }
+
+    public int getNumComensales() {
+        return numComensales;
+    }
+
+    public void setNumComensales(int numComensales) {
+        this.numComensales = numComensales;
+    }
+
+    public int getTiempo() {
+        return tiempo;
+    }
+
+    public void setTiempo(int tiempo) {
+        this.tiempo = tiempo;
+    }
+
+    public int getDificultad() {
+        return dificultad;
+    }
+
+    public void setDificultad(int dificultad) {
+        this.dificultad = dificultad;
+    }
+
+    public Set<String> getTags() {
+        return tags;
+    }
+
+    public void setTags(Set<String> tags) {
+        this.tags = tags;
+    }
+
+    public String getIngredientes() {
+        return ingredientes;
+    }
+
+    public void setIngredientes(String ingredientes) {
+        this.ingredientes = ingredientes;
     }
 
     public void setDescription(String description) {
@@ -99,17 +154,25 @@ public class Receta implements Serializable {
         this.comentarios = comentarios;
     }
 
-    public void setUsuario(Usuario usuario) {
+    public void setUsuario(User usuario) {
         this.usuario = usuario;
     }
 
-    public Usuario getUsuario() {
+    public User getUsuario() {
         return usuario;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getType() {
+        return type;
     }
 
     @Override
     public String toString() {
-         return "Receta{" +
+        return "Receta{" +
                 "  Id=" + this.id + '\'' +
                 ", title=" + this.title + '\'' +
                 ", description=" + this.description + '\'' +
@@ -119,7 +182,7 @@ public class Receta implements Serializable {
     }
 
     public void addRecetarioToReceta(Recetario recetario) {
-    this.recetario.add(recetario);
+        this.recetario.add(recetario);
     }
 
     public void addComentarioToReceta(Comentario comentario){
