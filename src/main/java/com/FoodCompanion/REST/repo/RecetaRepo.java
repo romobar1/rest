@@ -13,7 +13,8 @@ public interface RecetaRepo extends JpaRepository<Receta, Long> {
 
     Optional<Receta> findReceteById(Long id);
 
-    List<Receta> findRecetaFromRecetarioById(Long id);
+    List<Receta> findRecetaByRecetarioId(Long id);
 
-    List<Receta> findRecetaFromUsuarioById(Long id);
+    List<Receta> findRecetaByUsuarioId(Long id);
+
 }

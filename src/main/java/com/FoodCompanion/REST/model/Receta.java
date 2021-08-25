@@ -20,6 +20,7 @@ public class Receta implements Serializable {
     private String description;
     private int numComensales;
     private int tiempo;
+    private String imageURl;
     private String type;
     private int dificultad;
     @ElementCollection
@@ -39,12 +40,12 @@ public class Receta implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "recetarioId")
     )
     private List<Recetario> recetario = new ArrayList<>();
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JsonIgnore
-    @JoinColumn(name = "usuarioID")
+    @JoinColumn(name = "usuarioID",  updatable = false)
     private User usuario;
 
-    public Receta(String title, String description, String type, int numComensales, int tiempo, int dificultad, Set<String> tags, String ingredientes, String body, int rate) {
+    public Receta(String title, String description, String type, int numComensales, int tiempo, int dificultad, Set<String> tags, String ingredientes, String body, int rate, String imageURl) {
         this.title = title;
         this.description = description;
         this.numComensales = numComensales;
@@ -55,6 +56,7 @@ public class Receta implements Serializable {
         this.body = body;
         this.rate = rate;
         this.type = type;
+        this.imageURl = imageURl;
     }
 
     public Receta() {} // Empty constructor
@@ -187,5 +189,13 @@ public class Receta implements Serializable {
 
     public void addComentarioToReceta(Comentario comentario){
         this.comentarios.add(comentario);
+    }
+
+    public String getImageURl() {
+        return imageURl;
+    }
+
+    public void setImageURl(String imageURl) {
+        this.imageURl = imageURl;
     }
 }

@@ -17,8 +17,8 @@ public class Recetario implements Serializable {
     private String title;
     private String description;
     @ManyToMany(mappedBy = "recetario")
-    @JsonIgnore
     private List<Receta> recetas = new ArrayList<>();
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "usuarioId")
     private User usuario;
@@ -80,5 +80,9 @@ public class Recetario implements Serializable {
 
     public void addRecetaToRecetario(Receta receta) {
         recetas.add(receta);
+    }
+
+    public void addRecetarioToUser(User user) {
+        this.usuario = user;
     }
 }

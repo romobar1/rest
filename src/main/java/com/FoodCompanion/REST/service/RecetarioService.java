@@ -39,7 +39,7 @@ public class RecetarioService {
     }
 
     public List<Recetario> findRecetariosOfUser(Long id){
-        return recetarioRepo.findRecetarioFromUsuarioById(id);
+        return recetarioRepo.findRecetarioByUsuarioId(id);
     }
 
 }

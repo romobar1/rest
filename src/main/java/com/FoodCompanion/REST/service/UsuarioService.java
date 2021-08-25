@@ -34,5 +34,8 @@ public class UsuarioService   {
         return usuarioRepo.findUserById(id).orElseThrow(
                 ()-> new UsuarioNotFoundException(" Usuario con el id " + id + " no encontrado"));
     }
-
+    public User findUsuarioByName(String s){
+        return usuarioRepo.findByUsername(s).orElseThrow(
+                ()-> new UsuarioNotFoundException(" Usuario con el id " + s + " no encontrado"));
+    }
 }

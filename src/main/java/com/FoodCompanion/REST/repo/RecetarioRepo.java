@@ -12,5 +12,5 @@ public interface RecetarioRepo extends JpaRepository<Recetario, Long> {
 
     Optional<Recetario> findRecetarioById(Long id);
 
-    List<Recetario> findRecetarioFromUsuarioById(Long id);
+    List<Recetario> findRecetarioByUsuarioId(Long id);
 }

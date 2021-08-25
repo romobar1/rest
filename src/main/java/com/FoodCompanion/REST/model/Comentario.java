@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
 
 @Entity
 public class Comentario implements Serializable {
@@ -18,10 +19,11 @@ public class Comentario implements Serializable {
     @JoinColumn(name = "recetaId", nullable = false)
     @JsonIgnore
     private Receta receta;
-
-    public Comentario(String body, boolean isEdited){
+    private String userName;
+    private String date;
+    public Comentario(String body, String userName){
         this.body = body;
-        this.isEdited = isEdited;
+        this.userName = userName;
     }
 
     public Comentario(){}// Empty constructor
@@ -69,5 +71,22 @@ public class Comentario implements Serializable {
                 ",body=" + this.body + '\'' +
                 ",idEdited=" + this.isEdited + '\'' +
                 "}";
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
     }
 }

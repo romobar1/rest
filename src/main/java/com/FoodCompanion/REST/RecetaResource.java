@@ -1,8 +1,10 @@
 package com.FoodCompanion.REST;
 
+import com.FoodCompanion.REST.Uitlis.ResponseMessage;
 import com.FoodCompanion.REST.assembler.RecetaModelAssembler;
 import com.FoodCompanion.REST.model.Receta;
 import com.FoodCompanion.REST.model.User;
+import com.FoodCompanion.REST.service.FilesStorageServiceImpl;
 import com.FoodCompanion.REST.service.RecetaService;
 import com.FoodCompanion.REST.service.UsuarioService;
 import org.springframework.hateoas.CollectionModel;
@@ -10,9 +12,13 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.core.io.Resource;
+
 
 
 import javax.transaction.Transactional;
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,19 +26,21 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
-@CrossOrigin(origins = "*")
 @RequestMapping("/receta")
 public class RecetaResource {
     private final RecetaService recetaService;
     private final UsuarioService usuarioService;
     private final RecetaModelAssembler recetaModelAssembler;
+    private final FilesStorageServiceImpl filesStorageService;
     public RecetaResource (
             RecetaService recetaService,
             RecetaModelAssembler recetaModelAssembler,
-            UsuarioService usuarioService){
+            UsuarioService usuarioService,
+            FilesStorageServiceImpl filesStorageService){
         this.recetaService = recetaService;
         this.recetaModelAssembler = recetaModelAssembler;
         this.usuarioService = usuarioService;
+        this.filesStorageService = filesStorageService;
     }
 
     @GetMapping("/all")
@@ -52,7 +60,10 @@ public class RecetaResource {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<Receta> addReceta(@RequestBody Receta receta1){
+    public ResponseEntity<Receta> addReceta(@RequestBody Receta receta1) throws IOException {
+        String imageName = receta1.getImageURl();
+        String imageUrl = filesStorageService.load(imageName).getURL().toString();
+        receta1.setImageURl(imageUrl.substring(5));
         Receta receta = recetaService.addReceta(receta1);
         return new ResponseEntity<>(receta, HttpStatus.CREATED);
     }
@@ -63,17 +74,20 @@ public class RecetaResource {
         return new ResponseEntity<>(receta, HttpStatus.OK);
     }
 
-    @PostMapping("/add/user/{id}")
+    @PostMapping("/add/user/{name}")
      public ResponseEntity<Receta> addRecetaToUser(
-             @PathVariable("id")Long id,
+             @PathVariable("name")String name,
              @RequestBody Receta receta
     ){
-        User usuario = usuarioService.findUsuarioById(id);
-        usuario.addRecetaToUsuario(receta);
-        receta.setUsuario(usuario);
-        usuarioService.updateUsuario(usuario);
-        Receta receta1 = recetaService.updateReceta(receta);
-        return new ResponseEntity<>(receta1, HttpStatus.OK);
+            String imageName = receta.getImageURl();
+            String imageUrl = "http://localhost:8080/media/" + imageName;
+            receta.setImageURl(imageUrl.substring(5));
+            User usuario = usuarioService.findUsuarioByName(name);
+            usuario.addRecetaToUsuario(receta);
+            receta.setUsuario(usuario);
+            usuarioService.updateUsuario(usuario);
+            recetaService.addReceta(receta);
+            return new ResponseEntity<>(receta, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/delete/{id}")
@@ -93,8 +107,7 @@ public class RecetaResource {
         return CollectionModel.of(recetas,
                 linkTo(methodOn(RecetaResource.class).getAllRecetas()).withSelfRel());
     }
-
-    @GetMapping("/user/{id}/all")
+    @GetMapping("/user/{id}")
     public CollectionModel<EntityModel<Receta>> getRecetasFromUser(
             @PathVariable("id")Long id
     ){

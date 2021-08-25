@@ -3,6 +3,7 @@ package com.FoodCompanion.REST;
 import com.FoodCompanion.REST.assembler.RecetarioModelAssembler;
 import com.FoodCompanion.REST.model.Receta;
 import com.FoodCompanion.REST.model.Recetario;
+import com.FoodCompanion.REST.model.User;
 import com.FoodCompanion.REST.service.RecetaService;
 import com.FoodCompanion.REST.service.RecetarioService;
 import com.FoodCompanion.REST.service.UsuarioService;
@@ -51,8 +52,12 @@ public class RecetarioResource  {
         return recetarioModelAssembler.toModel(recetario);
     }
 
-    @PostMapping("/add")
-    public ResponseEntity<Recetario> addRecetario(@RequestBody Recetario recetario){
+    @PostMapping("/add/{id}")
+    public ResponseEntity<Recetario> addRecetario(
+            @RequestBody Recetario recetario,
+            @PathVariable("id") Long userId ){
+        User user = usuarioService.findUsuarioById(userId);
+        recetario.addRecetarioToUser(user);
         Recetario recetarioAdd = recetarioService.addRecetario(recetario);
         return new ResponseEntity<>(recetarioAdd, HttpStatus.CREATED);
     }
@@ -83,7 +88,7 @@ public class RecetarioResource  {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @GetMapping("/user/{id}/all")
+    @GetMapping("/user/{id}")
     public CollectionModel<EntityModel<Recetario>> getRecetarioFromOfUser(
             @PathVariable("id")Long id
     ){

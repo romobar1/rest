@@ -37,10 +37,11 @@ public class RecetaService {
     }
 
     public List<Receta> findRecetasFromRecetario(Long id){
-        return recetaRepo.findRecetaFromRecetarioById(id);
+        return recetaRepo.findRecetaByRecetarioId(id);
     }
 
     public List<Receta> findRecetasFromUser(Long id) {
-        return recetaRepo.findRecetaFromUsuarioById(id);
+        return recetaRepo.findRecetaByUsuarioId(id);
     }
+
 }

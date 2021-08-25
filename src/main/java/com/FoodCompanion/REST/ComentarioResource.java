@@ -12,6 +12,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,6 +27,7 @@ public class ComentarioResource {
     private final ComentarioService comentarioService;
     private final RecetaService recetaService;
     private final ComentarioModelAssenbler comentarioModelAssenbler;
+    private final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
     public ComentarioResource(
             ComentarioService comentarioService,
             ComentarioModelAssenbler comentarioModelAssenbler,
@@ -50,7 +54,7 @@ public class ComentarioResource {
         return comentarioModelAssenbler.toModel(comentario);
      }
 
-     @PostMapping("/add/user/{id}")
+     @PostMapping("/add/{id}")
     public ResponseEntity<Comentario> addComentario(
             @RequestBody Comentario comentario1,
             @PathVariable("id")Long id
@@ -58,7 +62,8 @@ public class ComentarioResource {
         Receta receta = recetaService.findRecetaById(id);
         receta.addComentarioToReceta(comentario1);
         comentario1.setReceta(receta);
-
+        String date = format.format(new Date());
+        comentario1.setDate(date);
         Comentario comentario = comentarioService.addComentario(comentario1);
         receta.addComentarioToReceta(comentario);
         recetaService.updateReceta(receta);
