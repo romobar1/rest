@@ -25,6 +25,7 @@ public class Receta implements Serializable {
     private int dificultad;
     @ElementCollection
     private Set<String> tags = new HashSet<>();
+    @Lob
     private String ingredientes;
     @Lob
     private String body;

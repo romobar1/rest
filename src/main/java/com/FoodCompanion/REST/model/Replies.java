@@ -1,5 +1,7 @@
 package com.FoodCompanion.REST.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.io.Serializable;
 @Entity
@@ -8,16 +10,17 @@ public class Replies implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(updatable = false,nullable = false)
     private Long id;
+    @Lob
     private String body;
-    private Long userId;
-    private String type;
+    private String userName;
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "usuarioId", nullable = false)
     private Post post;
-    public Replies(String body, Long userId, String type){
+    private String date;
+    public Replies(String body, String userName){
         this.body = body;
-        this.userId = userId;
-        this.type = type;
+        this.userName = userName;
     }
 
     public Replies(){} // empty constructor
@@ -38,20 +41,20 @@ public class Replies implements Serializable {
         this.body = body;
     }
 
-    public Long getUserId() {
-        return userId;
+    public String getDate() {
+        return date;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setDate(String date) {
+        this.date = date;
     }
 
-    public String getType() {
-        return type;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public Post getPost() {
@@ -67,8 +70,7 @@ public class Replies implements Serializable {
         return "Replies {" +
                 "Id=" + this.id + '\'' +
                 ", body=" + this.body + '\'' +
-                ", userId=" + this.userId + '\'' +
-                ", type=" + this.type + '\'' +
+                ", userId=" + this.userName + '\'' +
                 "}";
     }
 }

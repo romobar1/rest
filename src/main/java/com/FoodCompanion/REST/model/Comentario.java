@@ -13,6 +13,7 @@ public class Comentario implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false, updatable = false)
     private Long id;
+    @Lob
     private String body;
     private Boolean isEdited;
     @ManyToOne

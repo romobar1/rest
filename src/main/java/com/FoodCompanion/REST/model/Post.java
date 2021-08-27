@@ -14,22 +14,23 @@ public class Post implements Serializable {
     @Column(nullable = false, updatable = false)
     private Long id;
     private String name;
-    private String topics;
-    private Long userId;
+    private String body;
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "usuarioId", nullable = false)
     private User usuario;
     @OneToMany(mappedBy = "post")
-    @JsonIgnore
     private List<Replies> replies;
+    @JsonIgnore
     @ManyToOne
-    @JoinColumn(name = "forumId", nullable = false)
+    @JoinColumn(name = "forumId")
     private Forum forum;
+    private String userName;
+    private String datePost;
 
-    public Post(String name, String topics, Long userId){
+    public Post(String name, String body){
     this.name = name;
-    this.topics = topics;
-    this.userId = userId;
+    this.body = body;
     }
 
     public Post(){}// Empty constructor
@@ -38,32 +39,16 @@ public class Post implements Serializable {
         return id;
     }
 
-    public Long getUserId() {
-        return userId;
-    }
-
     public String getName() {
         return name;
-    }
-
-    public String getTopics() {
-        return topics;
     }
 
     public void setId(Long id) {
         this.id = id;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
     public void setName(String name) {
         this.name = name;
-    }
-
-    public void setTopics(String topics) {
-        this.topics = topics;
     }
 
     public void setUsuario(User usuario) {
@@ -90,13 +75,36 @@ public class Post implements Serializable {
         this.replies = replies;
     }
 
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getBody() {
+        return body;
+    }
+
+    public void setBody(String body) {
+        this.body = body;
+    }
+
+    public String getDatePost() {
+        return datePost;
+    }
+
+    public void setDatePost(String datePost) {
+        this.datePost = datePost;
+    }
+
     @Override
     public String toString() {
         return "Usuario{" +
                 "Id=" + this.id + '\'' +
                 ", name=" + this.name + '\'' +
-                ", email=" + this.topics + '\'' +
-                ", imageUrl=" + this.userId + '\'' +
+                ", email=" + this.body + '\'' +
                 "}";
     }
 

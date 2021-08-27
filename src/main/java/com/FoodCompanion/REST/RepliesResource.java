@@ -13,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,6 +27,8 @@ public class RepliesResource {
     private final RepliesService repliesService;
     private final RepliesModelAssembler repliesModelAssembler;
     private final PostService postService;
+    private final SimpleDateFormat format = new SimpleDateFormat("dd MMM yyyy HH:mm:ss");
+
     public RepliesResource (
             RepliesService repliesService,
             RepliesModelAssembler repliesModelAssembler,
@@ -63,6 +67,9 @@ public class RepliesResource {
         Post post = postService.findPostById(id);
         post.addReply(replies1);
         replies1.setPost(post);
+        Date date = new Date();
+        String dateReply = format.format(date);
+        replies1.setDate(dateReply);
         postService.updatePost(post);
         Replies replies = repliesService.addReplies(replies1);
         return new ResponseEntity<>(replies, HttpStatus.CREATED);

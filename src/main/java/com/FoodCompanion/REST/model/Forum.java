@@ -13,6 +13,7 @@ public class Forum implements Serializable {
     @Column(nullable = false, updatable = false, name = "forumId")
     private Long id;
     private String name;
+    @Lob
     private String description;
     @OneToMany(mappedBy = "forum")
     @JsonIgnore

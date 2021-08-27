@@ -14,6 +14,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
+import javax.xml.crypto.Data;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,6 +30,7 @@ public class PostResource {
     private final UsuarioService usuarioService;
     private final PostModelAssembler postModelAssembler;
     private final ForumService forumService;
+    private final SimpleDateFormat format = new SimpleDateFormat("dd MMM yyyy HH:mm:ss");
 
     public PostResource(
             PostService postService,
@@ -60,14 +64,23 @@ public class PostResource {
         Post post = postService.addPost(post1);
         return new ResponseEntity<>(post, HttpStatus.CREATED);
     }
-    @PostMapping("/add/user/{id}")
+    @PostMapping("/add/user/{id}/forum/{forumId}")
     public ResponseEntity<Post> addPost(
             @RequestBody Post post1,
-            @PathVariable("id")Long id
+            @PathVariable("id")Long userid,
+            @PathVariable("forumId") Long forumid
     ){
-        User usuario = usuarioService.findUsuarioById(id);
+        User usuario = usuarioService.findUsuarioById(userid);
+        Forum forum = forumService.findForumById(forumid);
         usuario.addPost(post1);
         post1.setUsuario(usuario);
+        post1.setForum(forum);
+        post1.setUserName(usuario.getUsername());
+        Date date = new Date();
+        String datePost = format.format(date);
+        post1.setDatePost(datePost);
+        forum.addPostToForum(post1);
+        forumService.updateForum(forum);
         usuarioService.updateUsuario(usuario);
         Post post = postService.addPost(post1);
         return new ResponseEntity<>(post, HttpStatus.CREATED);
@@ -85,23 +98,6 @@ public class PostResource {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PutMapping("/{forumId}/forum/post/{postId}")
-    public ResponseEntity<Post> addPostToForum(
-            @PathVariable("forumId")Long forumid,
-            @PathVariable("postId")Long postid
-    ){
-        Forum forum = forumService.findForumById(forumid);
-        Post post = postService.findPostById(postid);
-
-        forum.addPostToForum(post);
-        post.setForum(forum);
-
-        forumService.updateForum(forum);
-
-        Post postAdded = postService.updatePost(post);
-
-        return new ResponseEntity<>(postAdded, HttpStatus.OK);
-    }
 
     @GetMapping("/user/{id}/all")
     public CollectionModel<EntityModel<Post>> getPostFromUser(@PathVariable("id") Long id){
