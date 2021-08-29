@@ -22,7 +22,7 @@ public class Receta implements Serializable {
     private int tiempo;
     private String imageURl;
     private String type;
-    private int dificultad;
+    private String dificultad;
     @ElementCollection
     private Set<String> tags = new HashSet<>();
     @Lob
@@ -41,12 +41,12 @@ public class Receta implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "recetarioId")
     )
     private List<Recetario> recetario = new ArrayList<>();
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JsonIgnore
     @JoinColumn(name = "usuarioID",  updatable = false)
     private User usuario;
 
-    public Receta(String title, String description, String type, int numComensales, int tiempo, int dificultad, Set<String> tags, String ingredientes, String body, int rate, String imageURl) {
+    public Receta(String title, String description, String type, int numComensales, int tiempo, String dificultad, Set<String> tags, String ingredientes, String body, int rate, String imageURl) {
         this.title = title;
         this.description = description;
         this.numComensales = numComensales;
@@ -86,11 +86,11 @@ public class Receta implements Serializable {
         this.tiempo = tiempo;
     }
 
-    public int getDificultad() {
+    public String getDificultad() {
         return dificultad;
     }
 
-    public void setDificultad(int dificultad) {
+    public void setDificultad(String dificultad) {
         this.dificultad = dificultad;
     }
 

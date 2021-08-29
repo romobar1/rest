@@ -15,7 +15,7 @@ public class Replies implements Serializable {
     private String userName;
     @JsonIgnore
     @ManyToOne
-    @JoinColumn(name = "usuarioId", nullable = false)
+    @JoinColumn(name = "post_id")
     private Post post;
     private String date;
     public Replies(String body, String userName){

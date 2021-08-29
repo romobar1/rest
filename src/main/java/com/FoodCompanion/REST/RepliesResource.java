@@ -54,24 +54,19 @@ public class RepliesResource {
         return repliesModelAssembler.toModel(replies);
     }
 
-    @PostMapping("/add")
-    public ResponseEntity<Replies> addReply(@RequestBody Replies replies1){
-        Replies replies = repliesService.addReplies(replies1);
-        return new ResponseEntity<>(replies, HttpStatus.CREATED);
-    }
     @PostMapping("/add/{id}")
     public ResponseEntity<Replies> addReply(
-            @RequestBody Replies replies1,
+            @RequestBody Replies replies,
             @PathVariable("id")Long id
     ){
         Post post = postService.findPostById(id);
-        post.addReply(replies1);
-        replies1.setPost(post);
+        post.addReply(replies);
+        replies.setPost(post);
         Date date = new Date();
         String dateReply = format.format(date);
-        replies1.setDate(dateReply);
+        replies.setDate(dateReply);
         postService.updatePost(post);
-        Replies replies = repliesService.addReplies(replies1);
+        repliesService.addReplies(replies);
         return new ResponseEntity<>(replies, HttpStatus.CREATED);
     }
 

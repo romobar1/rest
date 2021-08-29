@@ -118,4 +118,12 @@ public class PostResource {
         return CollectionModel.of(post,
                 linkTo(methodOn(PostResource.class).getAllPosts()).withSelfRel());
     }
+
+    @PutMapping("/setDisabled/{id}")
+    public ResponseEntity<?> setPostDisabled(@PathVariable("id") Long postId){
+        Post post = postService.findPostById(postId);
+        post.setDisabled(true);
+        postService.updatePost(post);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

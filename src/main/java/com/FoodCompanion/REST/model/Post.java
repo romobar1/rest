@@ -27,6 +27,7 @@ public class Post implements Serializable {
     private Forum forum;
     private String userName;
     private String datePost;
+    private boolean isDisabled = false;
 
     public Post(String name, String body){
     this.name = name;
@@ -34,6 +35,7 @@ public class Post implements Serializable {
     }
 
     public Post(){}// Empty constructor
+
 
     public Long getId() {
         return id;
@@ -110,5 +112,13 @@ public class Post implements Serializable {
 
     public void addReply(Replies reply) {
         this.replies.add(reply);
+    }
+
+    public boolean isDisabled() {
+        return isDisabled;
+    }
+
+    public void setDisabled(boolean disabled) {
+        isDisabled = disabled;
     }
 }
